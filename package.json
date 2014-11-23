@@ -1,6 +1,6 @@
 {
   "name": "compute-argmin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Computes the minimum value of a numeric array and returns the corresponding array indices.",
   "author": {
     "name": "Athan Reines",
