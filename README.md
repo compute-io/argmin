@@ -19,18 +19,33 @@ For use in the browser, use [browserify](https://github.com/substack/node-browse
 To use the module,
 
 ``` javascript
-var foo = require( 'compute-argmin' );
+var argmin = require( 'compute-argmin' );
 ```
 
-#### foo( arr )
+#### argmin( arr )
 
-What does this function do?
+Computes the minimum value of an `array` and returns the corresponding `array` indices.
+
+``` javascript
+var data = [ 3, 2, 5, 2, 10 ];
+
+var idx = argmin( data );
+// returns [1,3]
+```
 
 
 ## Examples
 
 ``` javascript
-var foo = require( 'compute-argmin' );
+var argmin = require( 'compute-argmin' );
+
+// Simulate some data...
+var data = new Array( 100 );
+for ( var i = 0; i < data.length; i++ ) {
+	data[ i ] = Math.round( Math.random()*100 );
+}
+var idx = argmin( data );
+console.log( idx );
 ```
 
 To run the example code from the top-level application directory,
