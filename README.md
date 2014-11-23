@@ -2,7 +2,7 @@ argmin
 ===
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Dependencies][dependencies-image]][dependencies-url]
 
-> Computes the minimum value of an array and returns the corresponding array indices.
+> Computes the minimum value of a numeric array and returns the corresponding array indices.
 
 
 ## Installation
@@ -24,7 +24,7 @@ var argmin = require( 'compute-argmin' );
 
 #### argmin( arr )
 
-Computes the minimum value of an `array` and returns the corresponding `array` indices.
+Computes the minimum value of a numeric `array` and returns the corresponding `array` indices.
 
 ``` javascript
 var data = [ 3, 2, 5, 2, 10 ];
