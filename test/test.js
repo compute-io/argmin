@@ -1,10 +1,13 @@
-/* global require, describe, it */
+/* global describe, it, require */
 'use strict';
 
 // MODULES //
 
 var // Expectation library:
 	chai = require( 'chai' ),
+
+	// Matrix data structure:
+	matrix = require( 'dstructs-matrix' ),
 
 	// Module to be tested:
 	argmin = require( './../lib' );
@@ -24,9 +27,9 @@ describe( 'compute-argmin', function tests() {
 		expect( argmin ).to.be.a( 'function' );
 	});
 
-	it( 'should throw an error if provided a non-array', function test() {
+	it( 'should throw an error if the first argument is neither array-like or matrix-like', function test() {
 		var values = [
-			'5',
+			// '5', // valid as is array-like (length)
 			5,
 			true,
 			undefined,
@@ -46,7 +49,7 @@ describe( 'compute-argmin', function tests() {
 		}
 	});
 
-	it( 'should throw an error if provided an accessor argument which is not a function', function test() {
+	it( 'should throw an error if provided a dimension which is greater than 2 when provided a matrix', function test() {
 		var values = [
 			'5',
 			5,
@@ -55,44 +58,56 @@ describe( 'compute-argmin', function tests() {
 			null,
 			NaN,
 			[],
-			{}
+			{},
+			function(){}
 		];
 
 		for ( var i = 0; i < values.length; i++ ) {
-			expect( badValue( values[i] ) ).to.throw( TypeError );
+			expect( badValue( values[i] ) ).to.throw( Error );
 		}
 		function badValue( value ) {
 			return function() {
-				argmin( [1,2,3], value );
+				argmin( matrix( [2,2] ), {
+					'dim': value
+				});
 			};
 		}
 	});
 
-	it( 'should compute the minimum value and return the corresponding indices', function test() {
-		var data, expected, actual;
+	it( 'should compute the  minimum and return the corresponding indices', function test() {
+		var data, expected;
 
-		data = [ 4, 2, 5, 3, 8, 2 ];
+		data = [ 2, 4, 5, 3, 8, 2 ];
+		expected = [ 0, 5 ];
 
-		actual = argmin( data );
-		expected = [ 1, 5 ];
-
-		assert.deepEqual( actual, expected );
+		assert.deepEqual( argmin( data ), expected );
 	});
 
-	it( 'should compute the minimum value and return the corresponding indices using an accessor', function test() {
+	it( 'should compute the minimum of a typed array and return the corresponding indices', function test() {
+		var data, expected;
+
+		data = new Int8Array( [ 2, 4, 5, 3, 8, 2 ] );
+		expected = [ 0, 5 ];
+
+		assert.deepEqual( argmin( data ), expected );
+	});
+
+	it( 'should compute the minimum using an accessor function and return the corresponding indices', function test() {
 		var data, expected, actual;
 
 		data = [
-			{'x':4},
 			{'x':2},
+			{'x':4},
 			{'x':5},
 			{'x':3},
 			{'x':8},
 			{'x':2}
 		];
 
-		actual = argmin( data, getValue );
-		expected = [ 1, 5 ];
+		expected = [ 0, 5 ];
+		actual = argmin( data, {
+			'accessor': getValue
+		});
 
 		assert.deepEqual( actual, expected );
 
@@ -101,8 +116,72 @@ describe( 'compute-argmin', function tests() {
 		}
 	});
 
-	it( 'should return null if provided an empty array', function test() {
-		assert.isNull( argmin( [] ) );
+	it( 'should compute the minimum and return the corresponding indices along a matrix dimension', function test() {
+		var expected,
+			data,
+			mat,
+			idx,
+			i;
+
+		data = new Int8Array( 25 );
+		for ( i = 0; i < data.length; i++ ) {
+			data[ i ] = i;
+		}
+		mat = matrix( data, [5,5], 'int8' );
+
+		// Default:
+		idx = argmin( mat );
+		expected = [
+			[ 0 ],
+			[ 0 ],
+			[ 0 ],
+			[ 0 ],
+			[ 0 ],
+		];
+
+		assert.deepEqual( idx, expected, 'default' );
+
+		// Along columns:
+		idx = argmin( mat, {
+			'dim': 2
+		});
+		expected = [
+			[ 0 ],
+			[ 0 ],
+			[ 0 ],
+			[ 0 ],
+			[ 0 ],
+		];
+
+		assert.deepEqual( idx, expected, 'dim: 2' );
+
+		// Along rows:
+		idx = argmin( mat, {
+			'dim': 1
+		});
+		expected = [
+			[ 0 ],
+			[ 0 ],
+			[ 0 ],
+			[ 0 ],
+			[ 0 ],
+		];
+
+		assert.deepEqual( idx, expected, 'dim: 1' );
+	});
+
+	it( 'should compute the minimum of 1d matrices (vectors) and return the corresponding indices', function test() {
+		var data, mat;
+
+		data = [ 2, 4, 5, 3, 8, 2 ];
+
+		// Row vector:
+		mat = matrix( data, [1,6], 'int8' );
+		assert.deepEqual( argmin( mat ), [ 0, 5 ] );
+
+		// Column vector:
+		mat = matrix( data, [6,1], 'int8' );
+		assert.deepEqual( argmin( mat ), [ 0, 5 ] );
 	});
 
 });
