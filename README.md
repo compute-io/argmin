@@ -2,7 +2,7 @@ argmin
 ===
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Dependencies][dependencies-image]][dependencies-url]
 
-> Returns the array indices corresponding to the minimum value of an input array.
+> Returns the element indices corresponding to the minimum value.
 
 
 ## Installation
@@ -211,8 +211,7 @@ $ make view-cov
 
 ## Copyright
 
-Copyright &copy; 2014-2015. The Compute.io Authors.
-
+Copyright &copy; 2014-2015. The [Compute.io](https://github.com/compute-io) Authors.
 
 [npm-image]: http://img.shields.io/npm/v/compute-argmin.svg
 [npm-url]: https://npmjs.org/package/compute-argmin
